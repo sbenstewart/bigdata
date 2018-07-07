@@ -1,0 +1,38 @@
+CREATE TABLE users_xml(
+id INT,
+reputation INT,
+creationdate STRING,
+displayname STRING,
+lastaccessdate STRING,
+websiteurl STRING,
+location STRING,
+aboutme STRING,
+views INT,
+upvotes INT,
+downvotes INT,
+accountid INT)
+ROW FORMAT SERDE 'com.ibm.spss.hive.serde2.xml.XmlSerDe'
+WITH SERDEPROPERTIES (
+"column.xpath.id"="/row/@Id",
+"column.xpath.reputation"="/row/@Reputation",
+"column.xpath.creationdate"="/row/@CreationDate",
+"column.xpath.displayname"="/row/@DisplayName",
+"column.xpath.lastaccessdate"="/row/@LastAccessDate",
+"column.xpath.websiteurl"="/row/@WebsiteUrl",
+"column.xpath.location"="/row/@Location",
+"column.xpath.aboutme"="/row/@AboutMe",
+"column.xpath.views"="/row/@Views",
+"column.xpath.upvotes"="/row/@UpVotes",
+"column.xpath.downvotes"="/row/@DownVotes",
+"column.xpath.accountid"="/row/@AccountId"
+)
+STORED AS
+INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+TBLPROPERTIES (
+"xmlinput.start"="<row Id",
+"xmlinput.end"="/>"
+);
+
+
+LOAD DATA LOCAL INPATH 'Users.xml' INTO TABLE users_xml;

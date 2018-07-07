@@ -1,0 +1,28 @@
+CREATE TABLE posthistory_xml(
+id INT,
+posthistorytypeid INT,
+postid INT,
+revisionguid STRING,
+creationdate STRING,
+userid INT,
+text STRING)
+ROW FORMAT SERDE 'com.ibm.spss.hive.serde2.xml.XmlSerDe'
+WITH SERDEPROPERTIES (
+"column.xpath.id"="/row/@Id",
+"column.xpath.posthistorytypeid"="/row/@PostHistoryTypeId",
+"column.xpath.postid"="/row/@PostId",
+"column.xpath.revisionguid"="/row/@RevisionGUID",
+"column.xpath.creationdate"="/row/@CreationDate",
+"column.xpath.userid"="/row/@UserId",
+"column.xpath.text"="/row/@Text"
+)
+STORED AS
+INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+TBLPROPERTIES (
+"xmlinput.start"="<row Id",
+"xmlinput.end"="/>"
+);
+
+
+LOAD DATA LOCAL INPATH 'PostHistory.xml' INTO TABLE posthistory_xml;

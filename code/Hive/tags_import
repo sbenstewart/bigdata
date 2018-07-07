@@ -1,0 +1,24 @@
+CREATE TABLE tags_xml(
+id INT,
+tagname STRING,
+count INT,
+excerptpostid INT,
+wikipostid INT)
+ROW FORMAT SERDE 'com.ibm.spss.hive.serde2.xml.XmlSerDe'
+WITH SERDEPROPERTIES (
+"column.xpath.id"="/row/@Id",
+"column.xpath.tagname"="/row/@TagName",
+"column.xpath.count"="/row/@Count",
+"column.xpath.excerptpostid"="/row/@ExcerptPostId",
+"column.xpath.wikipostid"="/row/@WikiPostId"
+)
+STORED AS
+INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+TBLPROPERTIES (
+"xmlinput.start"="<row Id",
+"xmlinput.end"="/>"
+);
+
+
+LOAD DATA LOCAL INPATH 'Tags.xml' INTO TABLE tags_xml;

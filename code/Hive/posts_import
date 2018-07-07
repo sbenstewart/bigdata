@@ -1,0 +1,47 @@
+CREATE TABLE posts_xml_buckets(
+id INT,
+posttypeid INT,
+acceptedanswerid INT,
+creationdate STRING,
+score INT,
+viewcount INT,
+body STRING,
+owneruserid INT,
+lasteditoruserid INT,
+lasteditdate STRING,
+lastactivitydate STRING,
+title STRING,
+tags STRING,
+answercount INT,
+commentcount INT,
+favoritecount INT)
+Clustered by (posttypeid) into 6 buckets;
+ROW FORMAT SERDE 'com.ibm.spss.hive.serde2.xml.XmlSerDe'
+WITH SERDEPROPERTIES (
+"column.xpath.id"="/row/@Id",
+"column.xpath.posttypeid"="/row/@PostTypeId",
+"column.xpath.acceptedanswerid"="/row/@AcceptedAnswerId",
+"column.xpath.creationdate"="/row/@CreationDate",
+"column.xpath.score"="/row/@Score",
+"column.xpath.viewcount"="/row/@ViewCount",
+"column.xpath.body"="/row/@Body",
+"column.xpath.owneruserid"="/row/@OwnerUserId",
+"column.xpath.lasteditoruserid"="/row/@LastEditorUserId",
+"column.xpath.lasteditdate"="/row/@LastEditDate",
+"column.xpath.lastactivitydate"="/row/@LastActivityDate",
+"column.xpath.title"="/row/@Title",
+"column.xpath.tags"="/row/@Tags",
+"column.xpath.answercount"="/row/@AnswerCount",
+"column.xpath.commentcount"="/row/@CommentCount",
+"column.xpath.favoritecount"="/row/@FavoriteCount"
+)
+STORED AS
+INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+TBLPROPERTIES (
+"xmlinput.start"="<row Id",
+"xmlinput.end"="/>"
+);
+
+
+LOAD DATA LOCAL INPATH 'Posts.xml' INTO TABLE posts_xml;

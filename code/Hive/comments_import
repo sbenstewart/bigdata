@@ -1,0 +1,26 @@
+CREATE TABLE comments_xml(
+id INT,
+postid INT,
+score INT,
+text STRING,
+creationdate STRING,
+userid INT)
+ROW FORMAT SERDE 'com.ibm.spss.hive.serde2.xml.XmlSerDe'
+WITH SERDEPROPERTIES (
+"column.xpath.id"="/row/@Id",
+"column.xpath.postid"="/row/@PostId",
+"column.xpath.score"="/row/@Score",
+"column.xpath.text"="/row/@Text",
+"column.xpath.creationdate"="/row/@CreationDate",
+"column.xpath.userid"="/row/@UserId"
+)
+STORED AS
+INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+TBLPROPERTIES (
+"xmlinput.start"="<row Id",
+"xmlinput.end"="/>"
+);
+
+
+LOAD DATA LOCAL INPATH 'Comments.xml' INTO TABLE comments_xml;

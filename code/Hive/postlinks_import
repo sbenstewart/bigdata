@@ -1,0 +1,24 @@
+CREATE TABLE postlinks_xml(
+id INT,
+creationdate STRING,
+postid INT,
+relatedpostid INT,
+linktypeid INT)
+ROW FORMAT SERDE 'com.ibm.spss.hive.serde2.xml.XmlSerDe'
+WITH SERDEPROPERTIES (
+"column.xpath.id"="/row/@Id",
+"column.xpath.creationdate"="/row/@CreationDate",
+"column.xpath.postid"="/row/@PostId",
+"column.xpath.relatedpostid"="/row/@RelatedPostId",
+"column.xpath.linktypeid"="/row/@LinkTypeId"
+)
+STORED AS
+INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+TBLPROPERTIES (
+"xmlinput.start"="<row Id",
+"xmlinput.end"="/>"
+);
+
+
+LOAD DATA LOCAL INPATH 'PostLinks.xml' INTO TABLE postlinks_xml;

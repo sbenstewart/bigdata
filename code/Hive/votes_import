@@ -1,0 +1,22 @@
+CREATE TABLE votes_xml(
+id INT,
+postid INT,
+votetypeid INT,
+creationdate STRING)
+ROW FORMAT SERDE 'com.ibm.spss.hive.serde2.xml.XmlSerDe'
+WITH SERDEPROPERTIES (
+"column.xpath.id"="/row/@Id",
+"column.xpath.postid"="/row/@PostId",
+"column.xpath.votetypeid"="/row/@VoteTypeId",
+"column.xpath.creationdate"="/row/@CreationDate"
+)
+STORED AS
+INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+TBLPROPERTIES (
+"xmlinput.start"="<row Id",
+"xmlinput.end"="/>"
+);
+
+
+LOAD DATA LOCAL INPATH 'Votes.xml' INTO TABLE votes_xml;
